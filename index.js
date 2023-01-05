@@ -42,6 +42,7 @@ const splitPathIntoArray = (pathString) =>
 
 const combineArrayIntoPath = (pathArray) => pathArray.join(" ");
 
+// This will only work on two paths that have the same number of vertices
 const transitionPath = (pathStart, pathEnd, progress) => {
   const startParts = splitPathIntoArray(pathStart);
   const endParts = splitPathIntoArray(pathEnd);
@@ -74,14 +75,13 @@ const draw = (ticks) => {
   const pathEnd =
     "M350.5 4.00024C307 4.00025 273.5 68 298 133C324.269 202.694 368.37 298.435 270.5 410.5C139.5 560.5 76 570.5 4.5 714";
   const pathTween = transitionPath(pathStart, pathEnd, tickProgress);
-  const pathToDraw = new Path2D(pathTween);
 
   CTX.save();
+  CTX.translate(280, 60);
+  CTX.restore();
   CTX.lineWidth = 10;
   CTX.lineCap = "round";
-  CTX.translate(280, 60);
-  CTX.stroke(pathToDraw);
-  CTX.restore();
+  CTX.stroke(new Path2D(pathTween));
 };
 
 animate(draw);
