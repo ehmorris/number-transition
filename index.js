@@ -78,10 +78,10 @@ const draw = (ticks) => {
 
   CTX.save();
   CTX.translate(280, 60);
-  CTX.restore();
   CTX.lineWidth = 10;
   CTX.lineCap = "round";
   CTX.stroke(new Path2D(pathTween));
+  CTX.restore();
 };
 
 animate(draw);
