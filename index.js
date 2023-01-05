@@ -1,26 +1,10 @@
-const generateCanvas = ({ width, height, attachNode }) => {
-  const element = document.createElement("canvas");
-  const context = element.getContext("2d");
+import { animate, generateCanvas } from "./helpers.js";
 
-  element.style.width = width + "px";
-  element.style.height = height + "px";
-
-  const scale = window.devicePixelRatio;
-  element.width = Math.floor(width * scale);
-  element.height = Math.floor(height * scale);
-  context.scale(scale, scale);
-
-  document.querySelector(attachNode).appendChild(element);
-
-  return context;
-};
-
-const width = 800;
-const height = 500;
-
+const canvasWidth = 1000;
+const canvasHeight = 500;
 const CTX = generateCanvas({
-  width,
-  height,
+  width: canvasWidth,
+  height: canvasHeight,
   attachNode: ".canvasContainer",
 });
 
@@ -37,8 +21,7 @@ const linearProgress = (start, end, current) =>
 // Converts linearProgress into an eased progress
 // The bounds of 0 (beginning of the animation) and 1 (end of animation)
 // are hardcoded
-const  easeOutQuart = x =>
-  1 - Math.pow(1 - x, 4);
+const easeOutQuart = (x) => 1 - Math.pow(1 - x, 4);
 
 // Outputs a number between the start and end number as defined by progress
 //
@@ -52,21 +35,15 @@ const  easeOutQuart = x =>
 const transition = (start, end, progress) =>
   start + Math.sign(end - start) * Math.abs(end - start) * progress;
 
-let ticks = 0;
-const drawFrame = () => {
-  CTX.clearRect(0, 0, width, height);
-
+const draw = (ticks) => {
   const tickProgress = easeOutQuart(linearProgress(0, 2000, ticks));
-  const text = Math.trunc(transition(130, 70, tickProgress));
+  const animatedNumber = transition(130, 70, tickProgress).toFixed(1);
 
+  CTX.clearRect(0, 0, canvasWidth, canvasHeight);
   CTX.font = "48px sans-serif";
-  CTX.fillText(`transition between 130 and 70: ${text}`, 10, 50);
-
+  CTX.fillText(`transition between 130 and 70: ${animatedNumber}`, 10, 50);
   CTX.font = "12px sans-serif";
   CTX.fillText(`between ticks 0 and 2000: ${ticks}`, 10, 70);
-
-  ticks++;
-  window.requestAnimationFrame(drawFrame);
 };
 
-window.requestAnimationFrame(drawFrame);
+animate(draw);
