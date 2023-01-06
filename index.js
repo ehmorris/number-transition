@@ -16,12 +16,14 @@ const CTX = generateCanvas({
 // progress(30, 5, 17.5) = .5
 // progress(5, 30, 30) = 1 etc.
 const linearProgress = (start, end, current) =>
-  Math.min(Math.max(Math.abs(current - start) / Math.abs(end - start), 0), 1);
+  (current - start) / (end - start);
 
 // Converts linearProgress into an eased progress
 // The bounds of 0 (beginning of the animation) and 1 (end of animation)
 // are hardcoded
 const easeOutQuart = (x) => 1 - Math.pow(1 - x, 4);
+
+const reverseProgress = (progress) => -1 * (progress - 1);
 
 // Outputs a number between the start and end number as defined by progress
 //
@@ -59,16 +61,44 @@ const transitionPath = (pathStart, pathEnd, progress) => {
   return combineArrayIntoPath(tweenParts);
 };
 
-const draw = (ticks) => {
+const draw = (ticksElapsed) => {
   CTX.clearRect(0, 0, canvasWidth, canvasHeight);
 
-  const tickProgress = easeOutQuart(linearProgress(0, 2000, ticks));
+  const animationDurationInTicks = 500;
+  const tickProgress = linearProgress(
+    0,
+    animationDurationInTicks,
+    ticksElapsed
+  );
   const animatedNumber = transition(130, 70, tickProgress).toFixed(1);
   CTX.font = "48px sans-serif";
-  CTX.fillText(`transition between 130 and 70: ${animatedNumber}`, 10, 50);
+  CTX.fillText(
+    `transition from 130–70 in ${animationDurationInTicks} ticks: ${animatedNumber}`,
+    10,
+    50
+  );
 
   CTX.font = "12px sans-serif";
-  CTX.fillText(`between ticks 0 and 2000: ${ticks}`, 10, 70);
+  CTX.fillText(`Ticks: ${ticksElapsed}`, 10, 70);
+  CTX.fillText(
+    `tickProgress to ${animationDurationInTicks}: ${tickProgress.toFixed(2)}`,
+    10,
+    86
+  );
+  CTX.fillText(
+    `Reverse tickProgress: ${reverseProgress(tickProgress).toFixed(2)}`,
+    10,
+    102
+  );
+  CTX.fillText(
+    `Direction: ${
+      Math.floor(ticksElapsed / animationDurationInTicks) % 2 === 0
+        ? "Forward"
+        : "Reverse"
+    }`,
+    10,
+    118
+  );
 
   const pathStart =
     "M364.5 8.00009C343.5 0.166754 297 -1.29991 279 55.5001C256.5 126.5 276.5 335.5 229 476.5C181.5 617.5 178 843.5 3 951.5";
