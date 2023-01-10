@@ -17,9 +17,10 @@ export const generateCanvas = ({ width, height, attachNode }) => {
 
 export const animate = (drawFunc) => {
   let ticks = 0;
+  const startTime = Date.now();
 
   const drawFuncContainer = () => {
-    drawFunc(ticks);
+    drawFunc(ticks, startTime);
     ticks++;
     window.requestAnimationFrame(drawFuncContainer);
   };
@@ -36,7 +37,7 @@ export const textLayoutManager = ({ context, fontSize }) => {
     context.fillText(text, 32, lines * (fontSize + fontSize));
   };
 
-  const getLineYPos = (lineNumber) => lineNumber * (fontSize + fontSize);
+  const getLastTextYPos = () => lines * (fontSize + fontSize);
 
-  return { renderText, getLineYPos };
+  return { renderText, getLastTextYPos };
 };
