@@ -1,4 +1,4 @@
-import { animate, generateCanvas } from "./helpers.js";
+import { animate, generateCanvas, textLayoutManager } from "./helpers.js";
 
 const canvasWidth = 1000;
 const canvasHeight = 1100;
@@ -70,48 +70,51 @@ const draw = (ticksElapsed) => {
     animationDurationInTicks,
     ticksElapsed
   );
+  const textLayout = textLayoutManager({ context: CTX, fontSize: 32 });
+
+  textLayout.renderText(`Ticks: ${ticksElapsed}`);
+
   const animatedNumber = transition(130, 70, tickProgress).toFixed(1);
-  CTX.font = "48px sans-serif";
-  CTX.fillText(
-    `transition from 130–70 in ${animationDurationInTicks} ticks: ${animatedNumber}`,
-    10,
-    50
+  textLayout.renderText(
+    `Transition from 130–70 in ${animationDurationInTicks} ticks: ${animatedNumber}`
   );
 
-  CTX.font = "12px sans-serif";
-  CTX.fillText(`Ticks: ${ticksElapsed}`, 10, 70);
-  CTX.fillText(
-    `tickProgress to ${animationDurationInTicks}: ${tickProgress.toFixed(2)}`,
-    10,
-    86
-  );
-  CTX.fillText(
-    `Reverse tickProgress: ${reverseProgress(tickProgress).toFixed(2)}`,
-    10,
-    102
-  );
-  CTX.fillText(
-    `Direction: ${
-      Math.floor(ticksElapsed / animationDurationInTicks) % 2 === 0
-        ? "Forward"
-        : "Reverse"
-    }`,
-    10,
-    118
+  const loopingTickProgress = tickProgress % 1;
+  const isProgressIncreasing =
+    Math.floor(ticksElapsed / animationDurationInTicks) % 2 === 0;
+  const mirroredLoopingProgress = isProgressIncreasing
+    ? loopingTickProgress
+    : reverseProgress(loopingTickProgress);
+
+  textLayout.renderText(
+    `Mirrored loop progress: ${mirroredLoopingProgress.toFixed(2)}`
   );
 
   const pathStart =
     "M364.5 8.00009C343.5 0.166754 297 -1.29991 279 55.5001C256.5 126.5 276.5 335.5 229 476.5C181.5 617.5 178 843.5 3 951.5";
   const pathEnd =
     "M350.5 4.00024C307 4.00025 273.5 68 298 133C324.269 202.694 368.37 298.435 270.5 410.5C139.5 560.5 76 570.5 4.5 714";
-  const pathTween = transitionPath(pathStart, pathEnd, tickProgress);
+  const pathTween = transitionPath(pathStart, pathEnd, mirroredLoopingProgress);
 
   CTX.save();
-  CTX.translate(280, 60);
+  CTX.translate(280, textLayout.getLineYPos(3) - 16);
   CTX.lineWidth = 10;
   CTX.lineCap = "round";
   CTX.stroke(new Path2D(pathTween));
   CTX.restore();
+
+  textLayout.renderText(
+    `Square X position animated with mirrored loop: ${mirroredLoopingProgress.toFixed(
+      2
+    )}`
+  );
+
+  CTX.fillRect(
+    transition(32, 96, mirroredLoopingProgress),
+    textLayout.getLineYPos(4) + 16,
+    32,
+    32
+  );
 };
 
 animate(draw);

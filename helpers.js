@@ -26,3 +26,17 @@ export const animate = (drawFunc) => {
 
   window.requestAnimationFrame(drawFuncContainer);
 };
+
+export const textLayoutManager = ({ context, fontSize }) => {
+  let lines = 0;
+  context.font = `${fontSize}px sans-serif`;
+
+  const renderText = (text) => {
+    lines++;
+    context.fillText(text, 32, lines * (fontSize + fontSize));
+  };
+
+  const getLineYPos = (lineNumber) => lineNumber * (fontSize + fontSize);
+
+  return { renderText, getLineYPos };
+};
