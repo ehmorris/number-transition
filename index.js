@@ -1,4 +1,9 @@
-import { animate, generateCanvas, textLayoutManager } from "./helpers.js";
+import {
+  animate,
+  generateCanvas,
+  textLayoutManager,
+  easeInOutQuad,
+} from "./helpers.js";
 
 const canvasWidth = 1000;
 const canvasHeight = 1100;
@@ -12,9 +17,9 @@ const CTX = generateCanvas({
 // Transforms any number range into a range of 0–1
 //
 // Expected behavior:
-// progress(5, 30, 17.5) = .5
-// progress(30, 5, 17.5) = .5
-// progress(5, 30, 30) = 1 etc.
+// progress(5, 30, 17.5) -> .5
+// progress(30, 5, 17.5) -> .5
+// progress(5, 30, 30)   -> 1
 const progress = (start, end, current) => (current - start) / (end - start);
 
 const loopingProgress = (start, end, current) =>
@@ -25,35 +30,38 @@ const mirroredLoopingProgress = (start, end, current) => {
   return Math.floor(current / end) % 2 ? Math.abs(progress - 1) : progress;
 };
 
-// Easings
-// Transforms linear progress into eased progress
-const easeInOutQuad = (progress) =>
-  progress < 0.5
-    ? 2 * progress * progress
-    : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-
 // Transition
 // Transforms a range of 0–1 into any number range
 //
 // Expected behavior:
-// transition(5, 30, .5) = 17.5
-// transition(30, 5, .5) = 17.5
-// transition(5, 30, 1) = 30
-// transition(30, 5, 1) = 5
-// transition(5, 30, 0) = 5
-// transition(30, 5, 0) = 30
+// transition(5, 30, .5) -> 17.5
+// transition(30, 5, .5) -> 17.5
+// transition(5, 30, 1)  -> 30
+// transition(30, 5, 1)  -> 5
+// transition(5, 30, 0)  -> 5
+// transition(30, 5, 0)  -> 30
 const transition = (start, end, progress, easingFunc) => {
   const easedProgress = easingFunc ? easingFunc(progress) : progress;
   return start + Math.sign(end - start) * Math.abs(end - start) * easedProgress;
 };
 
-// This will only work on two paths that have the same number of vertices
-const transitionPath = (pathStart, pathEnd, progress, easingFunc) => {
-  const splitPathIntoArray = (pathString) =>
-    pathString
-      .match(/[a-zA-Z]+|[0-9.]+/g)
-      .map((n) => (parseFloat(n) ? parseFloat(n) : n));
+// Path to array
+//
+// Expected behavior:
+// splitPathIntoArray("M364.5 8.00009C343.5 0.166754 297")
+//   -> ['M', 364.5, 8.0009, 'C', 343.5, 0.166754, 297]
+const splitPathIntoArray = (pathString) =>
+  pathString
+    .match(/[a-zA-Z]+|[0-9.]+/g)
+    .map((n) => (parseFloat(n) ? parseFloat(n) : n));
 
+// Transition path
+// Applies a transition to all vertices in a path
+// This will only work on two paths that have the same number of vertices
+//
+// Expected behavior:
+// transitionPath("M10 20 40", "M20 40 80", .5) -> "M 15 30 60"
+const transitionPath = (pathStart, pathEnd, progress, easingFunc) => {
   const startParts = splitPathIntoArray(pathStart);
   const endParts = splitPathIntoArray(pathEnd);
   let tweenParts = [];
@@ -71,20 +79,20 @@ const transitionPath = (pathStart, pathEnd, progress, easingFunc) => {
   return tweenParts.join(" ");
 };
 
-const draw = (ticksElapsed, startTime) => {
+const drawDemo = (ticksElapsed, startTime) => {
   CTX.clearRect(0, 0, canvasWidth, canvasHeight);
   const textLayout = textLayoutManager({ context: CTX, fontSize: 32 });
   const progress = mirroredLoopingProgress(0, 300, ticksElapsed);
 
-  textLayout.renderText(`Ticks: ${ticksElapsed}`);
+  textLayout.newTextLine(`Ticks: ${ticksElapsed}`);
 
-  textLayout.renderText(
+  textLayout.newTextLine(
     `Average FPS: ${Math.round(
       ticksElapsed / ((Date.now() - startTime) / 1000)
     )}`
   );
 
-  textLayout.renderText(
+  textLayout.newTextLine(
     `Square loop: ${transition(32, 96, progress).toFixed(2)}`
   );
 
@@ -95,7 +103,7 @@ const draw = (ticksElapsed, startTime) => {
     16
   );
 
-  textLayout.renderText(
+  textLayout.newTextLine(
     `Square loop with easing: ${transition(
       32,
       96,
@@ -111,7 +119,7 @@ const draw = (ticksElapsed, startTime) => {
     16
   );
 
-  textLayout.renderText(
+  textLayout.newTextLine(
     `Looping path animation with easing: ${transition(
       0,
       1,
@@ -127,11 +135,12 @@ const draw = (ticksElapsed, startTime) => {
   const pathTween = transitionPath(pathStart, pathEnd, progress, easeInOutQuad);
 
   CTX.save();
-  CTX.translate(280, textLayout.getLastTextYPos() - 16);
+  CTX.translate(32, textLayout.getLastTextYPos() + 16);
+  CTX.scale(0.5, 0.5);
   CTX.lineWidth = 10;
   CTX.lineCap = "round";
   CTX.stroke(new Path2D(pathTween));
   CTX.restore();
 };
 
-animate(draw);
+animate(drawDemo);

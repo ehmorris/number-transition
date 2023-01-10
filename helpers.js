@@ -32,12 +32,17 @@ export const textLayoutManager = ({ context, fontSize }) => {
   let lines = 0;
   context.font = `${fontSize}px sans-serif`;
 
-  const renderText = (text) => {
+  const newTextLine = (text) => {
     lines++;
     context.fillText(text, 32, lines * (fontSize + fontSize));
   };
 
   const getLastTextYPos = () => lines * (fontSize + fontSize);
 
-  return { renderText, getLastTextYPos };
+  return { newTextLine, getLastTextYPos };
 };
+
+export const easeInOutQuad = (progress) =>
+  progress < 0.5
+    ? 2 * progress * progress
+    : 1 - Math.pow(-2 * progress + 2, 2) / 2;
