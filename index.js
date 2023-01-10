@@ -8,8 +8,8 @@ const CTX = generateCanvas({
   attachNode: ".canvasContainer",
 });
 
-// Outputs a number between 0 and 1 that represents where the current number is
-// between the start and end inputs
+// Progress
+// Transforms any number range into a range of 0–1
 //
 // Expected behavior:
 // progress(5, 30, 17.5) = .5
@@ -18,14 +18,17 @@ const CTX = generateCanvas({
 const linearProgress = (start, end, current) =>
   (current - start) / (end - start);
 
-// Converts linearProgress into an eased progress
-// The bounds of 0 (beginning of the animation) and 1 (end of animation)
-// are hardcoded
-const easeOutQuart = (x) => 1 - Math.pow(1 - x, 4);
-
 const reverseProgress = (progress) => -1 * (progress - 1);
 
-// Outputs a number between the start and end number as defined by progress
+// Easings
+// Transforms linear progress into eased progress
+const easeInOutQuad = (progress) =>
+  progress < 0.5
+    ? 2 * progress * progress
+    : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+// Transition
+// Transforms a range of 0–1 into any number range
 //
 // Expected behavior:
 // transition(5, 30, .5) = 17.5
@@ -34,8 +37,10 @@ const reverseProgress = (progress) => -1 * (progress - 1);
 // transition(30, 5, 1) = 5
 // transition(5, 30, 0) = 5
 // transition(30, 5, 0) = 30
-const transition = (start, end, progress) =>
-  start + Math.sign(end - start) * Math.abs(end - start) * progress;
+const transition = (start, end, progress, easingFunc) => {
+  const easedProgress = easingFunc ? easingFunc(progress) : progress;
+  return start + Math.sign(end - start) * Math.abs(end - start) * easedProgress;
+};
 
 const splitPathIntoArray = (pathString) =>
   pathString
@@ -45,14 +50,16 @@ const splitPathIntoArray = (pathString) =>
 const combineArrayIntoPath = (pathArray) => pathArray.join(" ");
 
 // This will only work on two paths that have the same number of vertices
-const transitionPath = (pathStart, pathEnd, progress) => {
+const transitionPath = (pathStart, pathEnd, progress, easingFunc) => {
   const startParts = splitPathIntoArray(pathStart);
   const endParts = splitPathIntoArray(pathEnd);
   let tweenParts = [];
 
   startParts.forEach((startPart, index) => {
     if (typeof startPart === "number") {
-      tweenParts.push(transition(startPart, endParts[index], progress));
+      tweenParts.push(
+        transition(startPart, endParts[index], progress, easingFunc)
+      );
     } else {
       tweenParts.push(startPart);
     }
@@ -94,7 +101,12 @@ const draw = (ticksElapsed) => {
     "M364.5 8.00009C343.5 0.166754 297 -1.29991 279 55.5001C256.5 126.5 276.5 335.5 229 476.5C181.5 617.5 178 843.5 3 951.5";
   const pathEnd =
     "M350.5 4.00024C307 4.00025 273.5 68 298 133C324.269 202.694 368.37 298.435 270.5 410.5C139.5 560.5 76 570.5 4.5 714";
-  const pathTween = transitionPath(pathStart, pathEnd, mirroredLoopingProgress);
+  const pathTween = transitionPath(
+    pathStart,
+    pathEnd,
+    mirroredLoopingProgress,
+    easeInOutQuad
+  );
 
   CTX.save();
   CTX.translate(280, textLayout.getLineYPos(3) - 16);
@@ -112,8 +124,17 @@ const draw = (ticksElapsed) => {
   CTX.fillRect(
     transition(32, 96, mirroredLoopingProgress),
     textLayout.getLineYPos(4) + 16,
-    32,
-    32
+    16,
+    16
+  );
+
+  textLayout.renderText("With easing");
+
+  CTX.fillRect(
+    transition(32, 96, mirroredLoopingProgress, easeInOutQuad),
+    textLayout.getLineYPos(5) + 16,
+    16,
+    16
   );
 };
 
