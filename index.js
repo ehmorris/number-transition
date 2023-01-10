@@ -5,6 +5,8 @@ import {
   easeInOutQuad,
 } from "./helpers.js";
 
+import { path1, path2 } from "./paths.js";
+
 const canvasWidth = 1000;
 const canvasHeight = 1100;
 const CTX = generateCanvas({
@@ -128,18 +130,12 @@ const drawDemo = (ticksElapsed, startTime) => {
     ).toFixed(2)}`
   );
 
-  const pathStart =
-    "M364.5 8.00009C343.5 0.166754 297 -1.29991 279 55.5001C256.5 126.5 276.5 335.5 229 476.5C181.5 617.5 178 843.5 3 951.5";
-  const pathEnd =
-    "M350.5 4.00024C307 4.00025 273.5 68 298 133C324.269 202.694 368.37 298.435 270.5 410.5C139.5 560.5 76 570.5 4.5 714";
-  const pathTween = transitionPath(pathStart, pathEnd, progress, easeInOutQuad);
-
   CTX.save();
   CTX.translate(32, textLayout.getLastTextYPos() + 16);
   CTX.scale(0.5, 0.5);
   CTX.lineWidth = 10;
   CTX.lineCap = "round";
-  CTX.stroke(new Path2D(pathTween));
+  CTX.stroke(new Path2D(transitionPath(path1, path2, progress, easeInOutQuad)));
   CTX.restore();
 };
 
