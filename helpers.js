@@ -41,8 +41,3 @@ export const textLayoutManager = ({ context, fontSize }) => {
 
   return { newTextLine, getLastTextYPos };
 };
-
-export const easeInOutQuad = (progress) =>
-  progress < 0.5
-    ? 2 * progress * progress
-    : 1 - Math.pow(-2 * progress + 2, 2) / 2;

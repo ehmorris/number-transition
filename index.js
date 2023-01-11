@@ -1,9 +1,10 @@
+import { animate, generateCanvas, textLayoutManager } from "./helpers.js";
 import {
-  animate,
-  generateCanvas,
-  textLayoutManager,
   easeInOutQuad,
-} from "./helpers.js";
+  easeInOutBack,
+  easeInOutCubic,
+  easeInOutSine,
+} from "./easings.js";
 
 import { path1, path2 } from "./paths.js";
 
@@ -110,12 +111,12 @@ const drawDemo = (ticksElapsed, startTime) => {
       32,
       96,
       progress,
-      easeInOutQuad
+      easeInOutSine
     ).toFixed(2)}`
   );
 
   CTX.fillRect(
-    transition(32, 96, progress, easeInOutQuad),
+    transition(32, 96, progress, easeInOutSine),
     textLayout.getLastTextYPos() + 16,
     16,
     16
@@ -126,7 +127,7 @@ const drawDemo = (ticksElapsed, startTime) => {
       0,
       1,
       progress,
-      easeInOutQuad
+      easeInOutSine
     ).toFixed(2)}`
   );
 
@@ -135,7 +136,7 @@ const drawDemo = (ticksElapsed, startTime) => {
   CTX.scale(0.5, 0.5);
   CTX.lineWidth = 10;
   CTX.lineCap = "round";
-  CTX.stroke(new Path2D(transitionPath(path1, path2, progress, easeInOutQuad)));
+  CTX.stroke(new Path2D(transitionPath(path1, path2, progress, easeInOutSine)));
   CTX.restore();
 };
 
