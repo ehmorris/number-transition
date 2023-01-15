@@ -13,7 +13,7 @@ export const paths = [
       y: 319,
     },
     animationDuration: 300,
-    opacity: 1,
+    lightness: 49,
   },
   {
     // In Figma: Flagella 4
@@ -29,7 +29,7 @@ export const paths = [
       y: 441,
     },
     animationDuration: 400,
-    opacity: 1,
+    lightness: 38,
   },
   {
     // In Figma: Flagella 3
@@ -45,7 +45,7 @@ export const paths = [
       y: 476.5,
     },
     animationDuration: 600,
-    opacity: 1,
+    lightness: 40,
   },
   {
     // In Figma: Flagella 1
@@ -61,7 +61,7 @@ export const paths = [
       y: 474,
     },
     animationDuration: 450,
-    opacity: 1,
+    lightness: 55,
   },
   {
     // In Figma: Background 1
@@ -77,7 +77,7 @@ export const paths = [
       y: 413.5,
     },
     animationDuration: 320,
-    opacity: 0.5,
+    lightness: 20,
   },
   {
     // In Figma: Background 2
@@ -93,6 +93,6 @@ export const paths = [
       y: 470.5,
     },
     animationDuration: 400,
-    opacity: 0.5,
+    lightness: 23,
   },
 ];

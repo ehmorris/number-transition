@@ -12,15 +12,15 @@ import {
 } from "./animation.js";
 import { paths } from "./paths.js";
 
-const canvasWidth = 1000;
-const canvasHeight = 1100;
+const canvasWidth = 500;
+const canvasHeight = 700;
 const CTX = generateCanvas({
   width: canvasWidth,
   height: canvasHeight,
   attachNode: ".canvasContainer",
 });
 
-const yOffset = -315;
+const yOffset = -200;
 
 animate((ticksElapsed, startTime) => {
   CTX.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -28,10 +28,11 @@ animate((ticksElapsed, startTime) => {
   CTX.lineWidth = 10;
   CTX.lineCap = "round";
 
-  paths.forEach((path) => {
+  // Reverse so the first paths are drawn on top of the others
+  [...paths].reverse().forEach((path) => {
     CTX.save();
     CTX.scale(0.5, 0.5);
-    CTX.strokeStyle = `rgba(0, 0, 0, ${path.opacity})`;
+    CTX.strokeStyle = `hsl(90, 18%, ${path.lightness}%)`;
 
     CTX.translate(
       transition(
