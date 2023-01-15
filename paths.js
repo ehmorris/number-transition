@@ -12,7 +12,7 @@ export const paths = [
       x: 93.5,
       y: 319,
     },
-    animationDuration: 300,
+    animationDuration: 1_500,
     lightness: 49,
   },
   {
@@ -28,7 +28,7 @@ export const paths = [
       x: 121.9,
       y: 441,
     },
-    animationDuration: 400,
+    animationDuration: 2_000,
     lightness: 38,
   },
   {
@@ -44,7 +44,7 @@ export const paths = [
       x: 81.36,
       y: 476.5,
     },
-    animationDuration: 600,
+    animationDuration: 3_000,
     lightness: 40,
   },
   {
@@ -60,7 +60,7 @@ export const paths = [
       x: 75.43,
       y: 474,
     },
-    animationDuration: 450,
+    animationDuration: 2_500,
     lightness: 55,
   },
   {
@@ -76,7 +76,7 @@ export const paths = [
       x: 66.59,
       y: 413.5,
     },
-    animationDuration: 320,
+    animationDuration: 3_000,
     lightness: 20,
   },
   {
@@ -92,7 +92,7 @@ export const paths = [
       x: 166,
       y: 470.5,
     },
-    animationDuration: 400,
+    animationDuration: 3_800,
     lightness: 23,
   },
 ];

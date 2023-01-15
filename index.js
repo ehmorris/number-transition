@@ -15,18 +15,12 @@ const CTX = generateCanvas({
   attachNode: ".canvasContainer",
 });
 
-animate((ticksElapsed, startTime) => {
+animate((millisecondsElapsed) => {
   CTX.clearRect(0, 0, canvasWidth, canvasHeight);
   const textLayout = textLayoutManager({ context: CTX, fontSize: 32 });
-  const progress = mirroredLoopingProgress(0, 300, ticksElapsed);
+  const progress = mirroredLoopingProgress(0, 5_000, millisecondsElapsed);
 
-  textLayout.newTextLine(`Ticks: ${ticksElapsed}`);
-
-  textLayout.newTextLine(
-    `Average FPS: ${Math.round(
-      ticksElapsed / ((Date.now() - startTime) / 1000)
-    )}`
-  );
+  textLayout.newTextLine(`Milliseconds: ${millisecondsElapsed}`);
 
   textLayout.newTextLine(
     `Square loop (x: ${transition(32, 96, progress).toFixed(2)})`

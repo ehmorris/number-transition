@@ -18,11 +18,11 @@ export const generateCanvas = ({ width, height, attachNode }) => {
 };
 
 export const animate = (drawFunc) => {
-  let ticks = 0;
   const startTime = Date.now();
+  let ticks = 0;
 
   const drawFuncContainer = () => {
-    drawFunc(ticks, startTime);
+    drawFunc(Date.now() - startTime);
     ticks++;
     window.requestAnimationFrame(drawFuncContainer);
   };

@@ -22,7 +22,7 @@ const CTX = generateCanvas({
 
 const yOffset = -200;
 
-animate((ticksElapsed, startTime) => {
+animate((millisecondsElapsed) => {
   CTX.clearRect(0, 0, canvasWidth, canvasHeight);
 
   CTX.lineWidth = 10;
@@ -38,13 +38,13 @@ animate((ticksElapsed, startTime) => {
       transition(
         path.startPosition.x,
         path.endPosition.x,
-        mirroredLoopingProgress(0, path.animationDuration, ticksElapsed),
+        mirroredLoopingProgress(0, path.animationDuration, millisecondsElapsed),
         easeInOutSine
       ),
       transition(
         path.startPosition.y + yOffset,
         path.endPosition.y + yOffset,
-        mirroredLoopingProgress(0, path.animationDuration, ticksElapsed),
+        mirroredLoopingProgress(0, path.animationDuration, millisecondsElapsed),
         easeInOutSine
       )
     );
@@ -53,7 +53,11 @@ animate((ticksElapsed, startTime) => {
         transitionPath(
           path.start,
           path.end,
-          mirroredLoopingProgress(0, path.animationDuration, ticksElapsed),
+          mirroredLoopingProgress(
+            0,
+            path.animationDuration,
+            millisecondsElapsed
+          ),
           easeInOutSine
         )
       )
