@@ -33,11 +33,11 @@ export const transition = (start, end, progress, easingFunc) => {
 // Path to array
 //
 // Expected behavior:
-// splitPathIntoArray("M364.5 8.00009C343.5 0.166754 297")
-//   -> ["M", 364.5, 8.0009, "C", 343.5, 0.166754, 297]
+// splitPathIntoArray("M364.5 8.00009C343.5 0.166-754 297")
+//   -> ["M", 364.5, 8.0009, "C", 343.5, 0.166, -754, 297]
 const splitPathIntoArray = (pathString) =>
   pathString
-    .match(/[a-zA-Z]+|[0-9.]+/g)
+    .match(/[a-zA-Z]+|[0-9-.]+/g)
     .map((n) => (parseFloat(n) ? parseFloat(n) : n));
 
 // Transition path
