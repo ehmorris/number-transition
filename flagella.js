@@ -1,11 +1,16 @@
-import { animate, generateCanvas, textLayoutManager } from "./helpers.js";
+import {
+  animate,
+  generateCanvas,
+  textLayoutManager,
+  randomBetween,
+} from "./helpers.js";
 import { easeInOutSine } from "./easings.js";
 import {
   mirroredLoopingProgress,
   transition,
   transitionPath,
 } from "./animation.js";
-import { path1, path2, path3, path4 } from "./paths.js";
+import { paths } from "./paths.js";
 
 const canvasWidth = 1000;
 const canvasHeight = 1100;
@@ -15,50 +20,43 @@ const CTX = generateCanvas({
   attachNode: ".canvasContainer",
 });
 
-const translateOffset = (CTX, x, y) => {
-  const offset = { x: 100, y: 0 };
-  CTX.translate(offset.x + x, offset.y + y);
-};
+const yOffset = -315;
 
 animate((ticksElapsed, startTime) => {
   CTX.clearRect(0, 0, canvasWidth, canvasHeight);
-  const progress1 = mirroredLoopingProgress(0, 300, ticksElapsed);
-  const progress2 = mirroredLoopingProgress(0, 400, ticksElapsed);
-  const progress3 = mirroredLoopingProgress(0, 500, ticksElapsed);
-  const progress4 = mirroredLoopingProgress(0, 380, ticksElapsed);
 
   CTX.lineWidth = 10;
   CTX.lineCap = "round";
 
-  CTX.save();
-  translateOffset(CTX, 0, 0);
-  CTX.scale(0.5, 0.5);
-  CTX.stroke(
-    new Path2D(transitionPath(path1.start, path1.end, progress1, easeInOutSine))
-  );
-  CTX.restore();
+  paths.forEach((path) => {
+    CTX.save();
+    CTX.scale(0.5, 0.5);
+    CTX.strokeStyle = `rgba(0, 0, 0, ${path.opacity})`;
 
-  CTX.save();
-  translateOffset(CTX, -35, 125.94);
-  CTX.scale(0.5, 0.5);
-  CTX.stroke(
-    new Path2D(transitionPath(path2.start, path2.end, progress2, easeInOutSine))
-  );
-  CTX.restore();
-
-  CTX.save();
-  translateOffset(CTX, 11.38, 161.44);
-  CTX.scale(0.5, 0.5);
-  CTX.stroke(
-    new Path2D(transitionPath(path3.start, path3.end, progress3, easeInOutSine))
-  );
-  CTX.restore();
-
-  CTX.save();
-  translateOffset(CTX, 1.5, 158.94);
-  CTX.scale(0.5, 0.5);
-  CTX.stroke(
-    new Path2D(transitionPath(path4.start, path4.end, progress4, easeInOutSine))
-  );
-  CTX.restore();
+    CTX.translate(
+      transition(
+        path.startPosition.x,
+        path.endPosition.x,
+        mirroredLoopingProgress(0, path.animationDuration, ticksElapsed),
+        easeInOutSine
+      ),
+      transition(
+        path.startPosition.y + yOffset,
+        path.endPosition.y + yOffset,
+        mirroredLoopingProgress(0, path.animationDuration, ticksElapsed),
+        easeInOutSine
+      )
+    );
+    CTX.stroke(
+      new Path2D(
+        transitionPath(
+          path.start,
+          path.end,
+          mirroredLoopingProgress(0, path.animationDuration, ticksElapsed),
+          easeInOutSine
+        )
+      )
+    );
+    CTX.restore();
+  });
 });

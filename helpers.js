@@ -1,3 +1,5 @@
+export const randomBetween = (min, max) => Math.random() * (max - min) + min;
+
 export const generateCanvas = ({ width, height, attachNode }) => {
   const element = document.createElement("canvas");
   const context = element.getContext("2d");

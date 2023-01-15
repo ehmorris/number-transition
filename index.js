@@ -5,7 +5,7 @@ import {
   transition,
   transitionPath,
 } from "./animation.js";
-import { path1 } from "./paths.js";
+import { paths } from "./paths.js";
 
 const canvasWidth = 1000;
 const canvasHeight = 1100;
@@ -70,7 +70,9 @@ animate((ticksElapsed, startTime) => {
   CTX.lineWidth = 10;
   CTX.lineCap = "round";
   CTX.stroke(
-    new Path2D(transitionPath(path1.start, path1.end, progress, easeInOutSine))
+    new Path2D(
+      transitionPath(paths[0].start, paths[0].end, progress, easeInOutSine)
+    )
   );
   CTX.restore();
 });
