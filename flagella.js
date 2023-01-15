@@ -1,9 +1,4 @@
-import {
-  animate,
-  generateCanvas,
-  textLayoutManager,
-  randomBetween,
-} from "./helpers.js";
+import { animate, generateCanvas } from "./helpers.js";
 import { easeInOutSine } from "./easings.js";
 import {
   mirroredLoopingProgress,
