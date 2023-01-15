@@ -29,7 +29,7 @@ animate((ticksElapsed, startTime) => {
   );
 
   textLayout.newTextLine(
-    `Square loop: ${transition(32, 96, progress).toFixed(2)}`
+    `Square loop (x: ${transition(32, 96, progress).toFixed(2)})`
   );
 
   CTX.fillRect(
@@ -40,12 +40,12 @@ animate((ticksElapsed, startTime) => {
   );
 
   textLayout.newTextLine(
-    `Square loop with easing: ${transition(
+    `Square loop with easing (x: ${transition(
       32,
       96,
       progress,
       easeInOutSine
-    ).toFixed(2)}`
+    ).toFixed(2)})`
   );
 
   CTX.fillRect(
@@ -56,12 +56,12 @@ animate((ticksElapsed, startTime) => {
   );
 
   textLayout.newTextLine(
-    `Looping path animation with easing: ${transition(
+    `Looping path animation with easing (progress: ${transition(
       0,
       1,
       progress,
       easeInOutSine
-    ).toFixed(2)}`
+    ).toFixed(2)})`
   );
 
   CTX.save();
