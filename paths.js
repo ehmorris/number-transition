@@ -1,5 +1,37 @@
 export const runPaths = [
   {
+    // In Figma: Background 1
+    start:
+      "M248 2.5C220.667 49.5 108.5 129.5 88.5 319.5C68.4999 509.5 77 661.5 4 867.5",
+    end: "M370 2.5C342.667 49.5 328.5 210 142.5 370C-43.4999 530 12.5001 714.5 12.5001 941.5",
+    startPosition: {
+      x: 188,
+      y: 413.5,
+    },
+    endPosition: {
+      x: 66.59,
+      y: 413.5,
+    },
+    animationDuration: 1_000,
+    lightness: 20,
+  },
+  {
+    // In Figma: Background 2
+    start:
+      "M283.5 0.5C274.5 94.8333 121 188.5 73.5 409C26 629.5 91 673.5 4 903.55",
+    end: "M346.5 0.5C337.5 94.8333 339 206 201 344C63 482 4 653 4 882.5",
+    startPosition: {
+      x: 229,
+      y: 470.5,
+    },
+    endPosition: {
+      x: 166,
+      y: 470.5,
+    },
+    animationDuration: 1_500,
+    lightness: 23,
+  },
+  {
     // In Figma: Flagella 2
     start:
       "M364.5 8.00009C343.5 0.166754 297 -1.29991 279 55.5001C256.5 126.5 276.5 335.5 229 476.5C181.5 617.5 178 843.5 3 951.5",
@@ -63,41 +95,40 @@ export const runPaths = [
     animationDuration: 2_000,
     lightness: 55,
   },
+];
+
+export const tumblePaths = [
   {
     // In Figma: Background 1
     start:
-      "M248 2.5C220.667 49.5 108.5 129.5 88.5 319.5C68.4999 509.5 77 661.5 4 867.5",
-    end: "M370 2.5C342.667 49.5 328.5 210 142.5 370C-43.4999 530 12.5001 714.5 12.5001 941.5",
+      "M550 4.5C489 32.5 293 97 211 261.5C129 426 123.667 581.333 3.5 696.5",
+    end: "M591 4.5C530 32.5 361.5 106.5 279.5 271C197.5 435.5 113.5 509 2.5 434.5",
     startPosition: {
-      x: 188,
-      y: 413.5,
+      x: -117.5,
+      y: 382.5,
     },
     endPosition: {
-      x: 66.59,
-      y: 413.5,
+      x: -159.5,
+      y: 382.5,
     },
-    animationDuration: 1_000,
+    animationDuration: 800,
     lightness: 20,
   },
   {
     // In Figma: Background 2
-    start:
-      "M283.5 0.5C274.5 94.8333 121 188.5 73.5 409C26 629.5 91 673.5 4 903.55",
-    end: "M346.5 0.5C337.5 94.8333 339 206 201 344C63 482 4 653 4 882.5",
+    start: "M410.5 2.5C445 81.5 589 336 451 474C313 612 13 829 4.5 957",
+    end: "M41.4999 2.5C75.9999 81.5 -34.5001 215.5 18.9999 352.5C72.4999 489.5 213 633 204.5 761",
     startPosition: {
-      x: 229,
-      y: 470.5,
+      x: 162.5,
+      y: 429.5,
     },
     endPosition: {
-      x: 166,
-      y: 470.5,
+      x: 531.11,
+      y: 429.5,
     },
-    animationDuration: 1_500,
+    animationDuration: 1_100,
     lightness: 23,
   },
-];
-
-export const tumblePaths = [
   {
     // In Figma: Flagella 2
     start:
@@ -161,36 +192,5 @@ export const tumblePaths = [
     },
     animationDuration: 1_200,
     lightness: 55,
-  },
-  {
-    // In Figma: Background 1
-    start:
-      "M550 4.5C489 32.5 293 97 211 261.5C129 426 123.667 581.333 3.5 696.5",
-    end: "M591 4.5C530 32.5 361.5 106.5 279.5 271C197.5 435.5 113.5 509 2.5 434.5",
-    startPosition: {
-      x: -117.5,
-      y: 382.5,
-    },
-    endPosition: {
-      x: -159.5,
-      y: 382.5,
-    },
-    animationDuration: 800,
-    lightness: 20,
-  },
-  {
-    // In Figma: Background 2
-    start: "M410.5 2.5C445 81.5 589 336 451 474C313 612 13 829 4.5 957",
-    end: "M41.4999 2.5C75.9999 81.5 -34.5001 215.5 18.9999 352.5C72.4999 489.5 213 633 204.5 761",
-    startPosition: {
-      x: 162.5,
-      y: 429.5,
-    },
-    endPosition: {
-      x: 531.11,
-      y: 429.5,
-    },
-    animationDuration: 1_100,
-    lightness: 23,
   },
 ];

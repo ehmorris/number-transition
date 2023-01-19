@@ -7,3 +7,18 @@ body {
 nav {
   margin: 32px;
 }
+
+button {
+  margin: 32px 0 32px 32px;
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+button:active {
+  color: red;
+}

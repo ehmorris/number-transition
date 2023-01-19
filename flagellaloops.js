@@ -21,8 +21,7 @@ animate((millisecondsElapsed) => {
   CTX.lineWidth = 10;
   CTX.lineCap = "round";
 
-  // Reverse so the first paths are drawn on top of the others
-  [...runPaths].reverse().forEach((path) => {
+  runPaths.forEach((path) => {
     CTX.save();
     CTX.scale(0.5, 0.5);
     CTX.strokeStyle = `hsl(90, 18%, ${path.lightness}%)`;
@@ -59,8 +58,7 @@ animate((millisecondsElapsed) => {
     CTX.restore();
   });
 
-  // Reverse so the first paths are drawn on top of the others
-  [...tumblePaths].reverse().forEach((path) => {
+  tumblePaths.forEach((path) => {
     CTX.save();
     CTX.scale(0.5, 0.5);
     CTX.strokeStyle = `hsl(90, 18%, ${path.lightness}%)`;
