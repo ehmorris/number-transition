@@ -5,7 +5,6 @@ import {
   transition,
   transitionPath,
 } from "./animation.js";
-import { paths } from "./paths.js";
 
 const canvasWidth = 1000;
 const canvasHeight = 1100;
@@ -60,12 +59,16 @@ animate((millisecondsElapsed) => {
 
   CTX.save();
   CTX.translate(32, textLayout.getLastTextYPos() + 16);
-  CTX.scale(0.5, 0.5);
-  CTX.lineWidth = 10;
+  CTX.lineWidth = 8;
   CTX.lineCap = "round";
   CTX.stroke(
     new Path2D(
-      transitionPath(paths[0].start, paths[0].end, progress, easeInOutSine)
+      transitionPath(
+        "M11.5 12.9999C83.5 7.99995 70 17.5 55.5 75C46.8216 109.414 89.5 102 123.5 110.5C157.5 119 165 131.5 171 172.5",
+        "M11.5 13C11.5 52 105.987 13 120 48.5C127.5 67.5 93.5 94.5 102.5 128.5C111.5 162.5 132.5 172.5 171 172.5",
+        progress,
+        easeInOutSine
+      )
     )
   );
   CTX.restore();
