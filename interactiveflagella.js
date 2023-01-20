@@ -18,9 +18,9 @@ const CTX = generateCanvas({
 let activeSet = runPaths;
 let runTransitionPhase1 = false;
 let runTransitionPhase2 = false;
-let transitionTarget = null;
+let transitionTargetSet = null;
 let timeOffset = 0;
-const transitionDuration = 500;
+const transitionDuration = 400;
 
 const startTransition = () => {
   runTransitionPhase1 = true;
@@ -33,7 +33,7 @@ const continueTransition = () => {
 
 const endTransition = () => {
   runTransitionPhase2 = false;
-  transitionTarget = null;
+  transitionTargetSet = null;
 };
 
 document
@@ -44,14 +44,14 @@ document
       !runTransitionPhase1 &&
       !runTransitionPhase2
     ) {
-      transitionTarget = tumblePaths;
+      transitionTargetSet = tumblePaths;
       startTransition();
     }
   });
 
 document.querySelector("button.activateRun").addEventListener("click", () => {
   if (activeSet !== runPaths && !runTransitionPhase1 && !runTransitionPhase2) {
-    transitionTarget = runPaths;
+    transitionTargetSet = runPaths;
     startTransition();
   }
 });
@@ -60,14 +60,14 @@ animate((millisecondsElapsed) => {
   CTX.clearRect(0, 0, canvasWidth, canvasHeight);
   CTX.lineWidth = 10;
   CTX.lineCap = "round";
-
-  const offsetTimeElapsed = millisecondsElapsed - timeOffset;
+  let offsetMillisecondsElapsed = millisecondsElapsed - timeOffset;
 
   // In order to smoothly tween between the current state and the target state,
-  // we have to freeze the current state and make that the `start`, with the
-  // target state as the `end`. And afterwards begin looping normally again.
+  // we have to capture the current state and make that the `start`, with the
+  // target state start as the `end`. And afterwards begin looping normally.
   if (runTransitionPhase1) {
     const newActiveSet = [];
+
     for (let flagellaIndex = 0; flagellaIndex < 6; flagellaIndex++) {
       newActiveSet.push({
         start: transitionPath(
@@ -76,11 +76,11 @@ animate((millisecondsElapsed) => {
           mirroredLoopingProgress(
             0,
             activeSet[flagellaIndex].animationDuration,
-            offsetTimeElapsed
+            offsetMillisecondsElapsed
           ),
           easeInOutSine
         ),
-        end: transitionTarget[flagellaIndex].start,
+        end: transitionTargetSet[flagellaIndex].start,
         startPosition: {
           x: transition(
             activeSet[flagellaIndex].startPosition.x,
@@ -88,7 +88,7 @@ animate((millisecondsElapsed) => {
             mirroredLoopingProgress(
               0,
               activeSet[flagellaIndex].animationDuration,
-              offsetTimeElapsed
+              offsetMillisecondsElapsed
             ),
             easeInOutSine
           ),
@@ -98,26 +98,30 @@ animate((millisecondsElapsed) => {
             mirroredLoopingProgress(
               0,
               activeSet[flagellaIndex].animationDuration,
-              offsetTimeElapsed
+              offsetMillisecondsElapsed
             ),
             easeInOutSine
           ),
         },
         endPosition: {
-          x: transitionTarget[flagellaIndex].startPosition.x,
-          y: transitionTarget[flagellaIndex].startPosition.y,
+          x: transitionTargetSet[flagellaIndex].startPosition.x,
+          y: transitionTargetSet[flagellaIndex].startPosition.y,
         },
         animationDuration: transitionDuration,
-        lightness: transitionTarget[flagellaIndex].lightness,
+        lightness: transitionTargetSet[flagellaIndex].lightness,
       });
     }
 
     activeSet = newActiveSet;
     timeOffset = millisecondsElapsed;
+    offsetMillisecondsElapsed = 0;
     continueTransition();
-  } else if (runTransitionPhase2 && offsetTimeElapsed >= transitionDuration) {
-    activeSet = transitionTarget;
+  }
+
+  if (runTransitionPhase2 && offsetMillisecondsElapsed >= transitionDuration) {
+    activeSet = transitionTargetSet;
     timeOffset = millisecondsElapsed;
+    offsetMillisecondsElapsed = 0;
     endTransition();
   }
 
@@ -133,7 +137,7 @@ animate((millisecondsElapsed) => {
         mirroredLoopingProgress(
           0,
           activeSet[flagellaIndex].animationDuration,
-          offsetTimeElapsed
+          offsetMillisecondsElapsed
         ),
         easeInOutSine
       ),
@@ -143,7 +147,7 @@ animate((millisecondsElapsed) => {
         mirroredLoopingProgress(
           0,
           activeSet[flagellaIndex].animationDuration,
-          offsetTimeElapsed
+          offsetMillisecondsElapsed
         ),
         easeInOutSine
       )
@@ -156,7 +160,7 @@ animate((millisecondsElapsed) => {
           mirroredLoopingProgress(
             0,
             activeSet[flagellaIndex].animationDuration,
-            offsetTimeElapsed
+            offsetMillisecondsElapsed
           ),
           easeInOutSine
         )
