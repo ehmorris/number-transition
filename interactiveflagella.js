@@ -16,26 +16,48 @@ const CTX = generateCanvas({
 });
 
 let activeSet = runPaths;
-let transitionFlag = false;
+let runTransitionPhase1 = false;
+let runTransitionPhase2 = false;
 let transitionTarget = null;
 let timeOffset = 0;
-const transitionDuration = 10_000;
+const transitionDuration = 500;
+
+const startTransition = () => {
+  runTransitionPhase1 = true;
+};
+
+const continueTransition = () => {
+  runTransitionPhase1 = false;
+  runTransitionPhase2 = true;
+};
+
+const endTransition = () => {
+  runTransitionPhase2 = false;
+  transitionTarget = null;
+};
 
 document
   .querySelector("button.activateTumble")
   .addEventListener("click", () => {
-    transitionTarget = tumblePaths;
-    transitionFlag = true;
+    if (
+      activeSet !== tumblePaths &&
+      !runTransitionPhase1 &&
+      !runTransitionPhase2
+    ) {
+      transitionTarget = tumblePaths;
+      startTransition();
+    }
   });
 
 document.querySelector("button.activateRun").addEventListener("click", () => {
-  transitionTarget = runPaths;
-  transitionFlag = true;
+  if (activeSet !== runPaths && !runTransitionPhase1 && !runTransitionPhase2) {
+    transitionTarget = runPaths;
+    startTransition();
+  }
 });
 
 animate((millisecondsElapsed) => {
   CTX.clearRect(0, 0, canvasWidth, canvasHeight);
-
   CTX.lineWidth = 10;
   CTX.lineCap = "round";
 
@@ -44,7 +66,7 @@ animate((millisecondsElapsed) => {
   // In order to smoothly tween between the current state and the target state,
   // we have to freeze the current state and make that the `start`, with the
   // target state as the `end`. And afterwards begin looping normally again.
-  if (transitionFlag) {
+  if (runTransitionPhase1) {
     const newActiveSet = [];
     for (let flagellaIndex = 0; flagellaIndex < 6; flagellaIndex++) {
       newActiveSet.push({
@@ -91,22 +113,12 @@ animate((millisecondsElapsed) => {
     }
 
     activeSet = newActiveSet;
-    timeOffset = timeOffset + millisecondsElapsed;
-    transitionFlag = false;
-
-    // TODO: reset flags at end of transition duration (how to calculate, maybe
-    // by using custom timing for this transition like 10_000)
-    //
-    // TODO: somehow inititate normal loop at end of transition duration
-  }
-
-  if (
-    !transitionFlag &&
-    transitionTarget &&
-    offsetTimeElapsed >= transitionDuration
-  ) {
+    timeOffset = millisecondsElapsed;
+    continueTransition();
+  } else if (runTransitionPhase2 && offsetTimeElapsed >= transitionDuration) {
     activeSet = transitionTarget;
-    transitionTarget = null;
+    timeOffset = millisecondsElapsed;
+    endTransition();
   }
 
   for (let flagellaIndex = 0; flagellaIndex < 6; flagellaIndex++) {
