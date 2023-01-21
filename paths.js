@@ -1,4 +1,24 @@
 export const runPaths = [
+  // BETTER FORMAT FOR PATHS
+  // {
+  //   from: {
+  //     path: "M248 2.5C220.667 49.5 108.5 129.5 88.5 319.5C68.4999 509.5 77 661.5 4 867.5",
+  //     position: {
+  //       x: 188,
+  //       y: 413.5,
+  //     },
+  //   },
+  //   to: {
+  //     path: "M370 2.5C342.667 49.5 328.5 210 142.5 370C-43.4999 530 12.5001 714.5 12.5001 941.5",
+  //     position: {
+  //       x: 66.59,
+  //       y: 413.5,
+  //     },
+  //   },
+  //   animationDuration: 1_000,
+  //   lightness: 20,
+  // },
+
   {
     // In Figma: Background 1
     start:

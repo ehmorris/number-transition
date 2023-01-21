@@ -22,20 +22,6 @@ let transitionTargetSet = null;
 let timeOffset = 0;
 const transitionDuration = 400;
 
-const startTransition = () => {
-  runTransitionPhase1 = true;
-};
-
-const continueTransition = () => {
-  runTransitionPhase1 = false;
-  runTransitionPhase2 = true;
-};
-
-const endTransition = () => {
-  runTransitionPhase2 = false;
-  transitionTargetSet = null;
-};
-
 document
   .querySelector("button.activateTumble")
   .addEventListener("click", () => {
@@ -45,14 +31,14 @@ document
       !runTransitionPhase2
     ) {
       transitionTargetSet = tumblePaths;
-      startTransition();
+      runTransitionPhase1 = true;
     }
   });
 
 document.querySelector("button.activateRun").addEventListener("click", () => {
   if (activeSet !== runPaths && !runTransitionPhase1 && !runTransitionPhase2) {
     transitionTargetSet = runPaths;
-    startTransition();
+    runTransitionPhase1 = true;
   }
 });
 
@@ -68,6 +54,9 @@ animate((millisecondsElapsed) => {
   if (runTransitionPhase1) {
     const newActiveSet = [];
 
+    // Create a new set of path objects that capture the current state of the
+    // active set as the start of the animation, and set the initial state of
+    // the target set as the end of the animation
     for (let flagellaIndex = 0; flagellaIndex < 6; flagellaIndex++) {
       newActiveSet.push({
         start: transitionPath(
@@ -115,14 +104,16 @@ animate((millisecondsElapsed) => {
     activeSet = newActiveSet;
     timeOffset = millisecondsElapsed;
     offsetMillisecondsElapsed = 0;
-    continueTransition();
+    runTransitionPhase1 = false;
+    runTransitionPhase2 = true;
   }
 
   if (runTransitionPhase2 && offsetMillisecondsElapsed >= transitionDuration) {
     activeSet = transitionTargetSet;
     timeOffset = millisecondsElapsed;
     offsetMillisecondsElapsed = 0;
-    endTransition();
+    runTransitionPhase2 = false;
+    transitionTargetSet = null;
   }
 
   for (let flagellaIndex = 0; flagellaIndex < 6; flagellaIndex++) {
