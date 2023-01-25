@@ -48,32 +48,17 @@ animate((millisecondsElapsed) => {
   CTX.lineCap = "round";
   let offsetMillisecondsElapsed = millisecondsElapsed - timeOffset;
 
-  // In order to smoothly tween between the current state and the target state,
-  // we have to capture the current state and make that the `start`, with the
-  // target state start as the `end`. And afterwards begin looping normally.
   if (runTransitionPhase1) {
+    // Create a new set that captures the current state of the active set as the
+    // start of the animation. Set the end state to the beginning of the normal
+    // loop that's targeted
     const newActiveSet = [];
-
-    // Create a new set of path objects that capture the current state of the
-    // active set as the start of the animation, and set the initial state of
-    // the target set as the end of the animation
     for (let flagellaIndex = 0; flagellaIndex < 6; flagellaIndex++) {
       newActiveSet.push({
-        start: transitionPath(
-          activeSet[flagellaIndex].start,
-          activeSet[flagellaIndex].end,
-          mirroredLoopingProgress(
-            0,
-            activeSet[flagellaIndex].animationDuration,
-            offsetMillisecondsElapsed
-          ),
-          easeInOutSine
-        ),
-        end: transitionTargetSet[flagellaIndex].start,
-        startPosition: {
-          x: transition(
-            activeSet[flagellaIndex].startPosition.x,
-            activeSet[flagellaIndex].endPosition.x,
+        from: {
+          path: transitionPath(
+            activeSet[flagellaIndex].from.path,
+            activeSet[flagellaIndex].to.path,
             mirroredLoopingProgress(
               0,
               activeSet[flagellaIndex].animationDuration,
@@ -81,20 +66,35 @@ animate((millisecondsElapsed) => {
             ),
             easeInOutSine
           ),
-          y: transition(
-            activeSet[flagellaIndex].startPosition.y,
-            activeSet[flagellaIndex].endPosition.y,
-            mirroredLoopingProgress(
-              0,
-              activeSet[flagellaIndex].animationDuration,
-              offsetMillisecondsElapsed
+          position: {
+            x: transition(
+              activeSet[flagellaIndex].from.position.x,
+              activeSet[flagellaIndex].to.position.x,
+              mirroredLoopingProgress(
+                0,
+                activeSet[flagellaIndex].animationDuration,
+                offsetMillisecondsElapsed
+              ),
+              easeInOutSine
             ),
-            easeInOutSine
-          ),
+            y: transition(
+              activeSet[flagellaIndex].from.position.y,
+              activeSet[flagellaIndex].to.position.y,
+              mirroredLoopingProgress(
+                0,
+                activeSet[flagellaIndex].animationDuration,
+                offsetMillisecondsElapsed
+              ),
+              easeInOutSine
+            ),
+          },
         },
-        endPosition: {
-          x: transitionTargetSet[flagellaIndex].startPosition.x,
-          y: transitionTargetSet[flagellaIndex].startPosition.y,
+        to: {
+          path: transitionTargetSet[flagellaIndex].from.path,
+          position: {
+            x: transitionTargetSet[flagellaIndex].from.position.x,
+            y: transitionTargetSet[flagellaIndex].from.position.y,
+          },
         },
         animationDuration: transitionDuration,
         lightness: transitionTargetSet[flagellaIndex].lightness,
@@ -123,8 +123,8 @@ animate((millisecondsElapsed) => {
 
     CTX.translate(
       transition(
-        activeSet[flagellaIndex].startPosition.x,
-        activeSet[flagellaIndex].endPosition.x,
+        activeSet[flagellaIndex].from.position.x,
+        activeSet[flagellaIndex].to.position.x,
         mirroredLoopingProgress(
           0,
           activeSet[flagellaIndex].animationDuration,
@@ -133,8 +133,8 @@ animate((millisecondsElapsed) => {
         easeInOutSine
       ),
       transition(
-        activeSet[flagellaIndex].startPosition.y,
-        activeSet[flagellaIndex].endPosition.y,
+        activeSet[flagellaIndex].from.position.y,
+        activeSet[flagellaIndex].to.position.y,
         mirroredLoopingProgress(
           0,
           activeSet[flagellaIndex].animationDuration,
@@ -146,8 +146,8 @@ animate((millisecondsElapsed) => {
     CTX.stroke(
       new Path2D(
         transitionPath(
-          activeSet[flagellaIndex].start,
-          activeSet[flagellaIndex].end,
+          activeSet[flagellaIndex].from.path,
+          activeSet[flagellaIndex].to.path,
           mirroredLoopingProgress(
             0,
             activeSet[flagellaIndex].animationDuration,

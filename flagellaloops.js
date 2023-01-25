@@ -21,34 +21,42 @@ animate((millisecondsElapsed) => {
   CTX.lineWidth = 10;
   CTX.lineCap = "round";
 
-  runPaths.forEach((path) => {
+  runPaths.forEach((pathPair) => {
     CTX.save();
     CTX.scale(0.5, 0.5);
-    CTX.strokeStyle = `hsl(90, 18%, ${path.lightness}%)`;
+    CTX.strokeStyle = `hsl(90, 18%, ${pathPair.lightness}%)`;
     const yOffset = -200;
 
     CTX.translate(
       transition(
-        path.startPosition.x,
-        path.endPosition.x,
-        mirroredLoopingProgress(0, path.animationDuration, millisecondsElapsed),
+        pathPair.from.position.x,
+        pathPair.to.position.x,
+        mirroredLoopingProgress(
+          0,
+          pathPair.animationDuration,
+          millisecondsElapsed
+        ),
         easeInOutSine
       ),
       transition(
-        path.startPosition.y + yOffset,
-        path.endPosition.y + yOffset,
-        mirroredLoopingProgress(0, path.animationDuration, millisecondsElapsed),
+        pathPair.from.position.y + yOffset,
+        pathPair.to.position.y + yOffset,
+        mirroredLoopingProgress(
+          0,
+          pathPair.animationDuration,
+          millisecondsElapsed
+        ),
         easeInOutSine
       )
     );
     CTX.stroke(
       new Path2D(
         transitionPath(
-          path.start,
-          path.end,
+          pathPair.from.path,
+          pathPair.to.path,
           mirroredLoopingProgress(
             0,
-            path.animationDuration,
+            pathPair.animationDuration,
             millisecondsElapsed
           ),
           easeInOutSine
@@ -58,35 +66,43 @@ animate((millisecondsElapsed) => {
     CTX.restore();
   });
 
-  tumblePaths.forEach((path) => {
+  tumblePaths.forEach((pathPair) => {
     CTX.save();
     CTX.scale(0.5, 0.5);
-    CTX.strokeStyle = `hsl(90, 18%, ${path.lightness}%)`;
+    CTX.strokeStyle = `hsl(90, 18%, ${pathPair.lightness}%)`;
     const xOffset = 800;
     const yOffset = -200;
 
     CTX.translate(
       transition(
-        path.startPosition.x + xOffset,
-        path.endPosition.x + xOffset,
-        mirroredLoopingProgress(0, path.animationDuration, millisecondsElapsed),
+        pathPair.from.position.x + xOffset,
+        pathPair.to.position.x + xOffset,
+        mirroredLoopingProgress(
+          0,
+          pathPair.animationDuration,
+          millisecondsElapsed
+        ),
         easeInOutCubic
       ),
       transition(
-        path.startPosition.y + yOffset,
-        path.endPosition.y + yOffset,
-        mirroredLoopingProgress(0, path.animationDuration, millisecondsElapsed),
+        pathPair.from.position.y + yOffset,
+        pathPair.to.position.y + yOffset,
+        mirroredLoopingProgress(
+          0,
+          pathPair.animationDuration,
+          millisecondsElapsed
+        ),
         easeInOutCubic
       )
     );
     CTX.stroke(
       new Path2D(
         transitionPath(
-          path.start,
-          path.end,
+          pathPair.from.path,
+          pathPair.to.path,
           mirroredLoopingProgress(
             0,
-            path.animationDuration,
+            pathPair.animationDuration,
             millisecondsElapsed
           ),
           easeInOutCubic
