@@ -1,4 +1,31 @@
-export const runPaths = [
+import { transition, transitionPath } from "./animation.js";
+
+export const getAnimatedPathAtPoint = (pathPair, progress, easing) => {
+  return {
+    path: transitionPath(
+      pathPair.from.path,
+      pathPair.to.path,
+      progress,
+      easing
+    ),
+    position: {
+      x: transition(
+        pathPair.from.position.x,
+        pathPair.to.position.x,
+        progress,
+        easing
+      ),
+      y: transition(
+        pathPair.from.position.y,
+        pathPair.to.position.y,
+        progress,
+        easing
+      ),
+    },
+  };
+};
+
+export const runPathPairs = [
   {
     // In Figma: Background 1
     from: {
@@ -115,7 +142,7 @@ export const runPaths = [
   },
 ];
 
-export const tumblePaths = [
+export const tumblePathPairs = [
   {
     // In Figma: Background 1
     from: {

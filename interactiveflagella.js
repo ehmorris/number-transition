@@ -1,11 +1,11 @@
 import { animate, generateCanvas } from "./helpers.js";
 import { easeInOutSine } from "./easings.js";
+import { mirroredLoopingProgress } from "./animation.js";
 import {
-  mirroredLoopingProgress,
-  transition,
-  transitionPath,
-} from "./animation.js";
-import { runPaths, tumblePaths } from "./paths.js";
+  runPathPairs,
+  tumblePathPairs,
+  getAnimatedPathAtPoint,
+} from "./paths.js";
 
 const canvasWidth = 700;
 const canvasHeight = 700;
@@ -15,7 +15,7 @@ const CTX = generateCanvas({
   attachNode: ".canvasContainer",
 });
 
-let activeSet = runPaths;
+let activeSet = runPathPairs;
 let runTransitionPhase1 = false;
 let runTransitionPhase2 = false;
 let transitionTargetSet = null;
@@ -26,18 +26,22 @@ document
   .querySelector("button.activateTumble")
   .addEventListener("click", () => {
     if (
-      activeSet !== tumblePaths &&
+      activeSet !== tumblePathPairs &&
       !runTransitionPhase1 &&
       !runTransitionPhase2
     ) {
-      transitionTargetSet = tumblePaths;
+      transitionTargetSet = tumblePathPairs;
       runTransitionPhase1 = true;
     }
   });
 
 document.querySelector("button.activateRun").addEventListener("click", () => {
-  if (activeSet !== runPaths && !runTransitionPhase1 && !runTransitionPhase2) {
-    transitionTargetSet = runPaths;
+  if (
+    activeSet !== runPathPairs &&
+    !runTransitionPhase1 &&
+    !runTransitionPhase2
+  ) {
+    transitionTargetSet = runPathPairs;
     runTransitionPhase1 = true;
   }
 });
@@ -55,40 +59,15 @@ animate((millisecondsElapsed) => {
     const newActiveSet = [];
     for (let flagellaIndex = 0; flagellaIndex < 6; flagellaIndex++) {
       newActiveSet.push({
-        from: {
-          path: transitionPath(
-            activeSet[flagellaIndex].from.path,
-            activeSet[flagellaIndex].to.path,
-            mirroredLoopingProgress(
-              0,
-              activeSet[flagellaIndex].animationDuration,
-              offsetMillisecondsElapsed
-            ),
-            easeInOutSine
+        from: getAnimatedPathAtPoint(
+          activeSet[flagellaIndex],
+          mirroredLoopingProgress(
+            0,
+            activeSet[flagellaIndex].animationDuration,
+            offsetMillisecondsElapsed
           ),
-          position: {
-            x: transition(
-              activeSet[flagellaIndex].from.position.x,
-              activeSet[flagellaIndex].to.position.x,
-              mirroredLoopingProgress(
-                0,
-                activeSet[flagellaIndex].animationDuration,
-                offsetMillisecondsElapsed
-              ),
-              easeInOutSine
-            ),
-            y: transition(
-              activeSet[flagellaIndex].from.position.y,
-              activeSet[flagellaIndex].to.position.y,
-              mirroredLoopingProgress(
-                0,
-                activeSet[flagellaIndex].animationDuration,
-                offsetMillisecondsElapsed
-              ),
-              easeInOutSine
-            ),
-          },
-        },
+          easeInOutSine
+        ),
         to: {
           path: transitionTargetSet[flagellaIndex].from.path,
           position: {
@@ -117,46 +96,21 @@ animate((millisecondsElapsed) => {
   }
 
   for (let flagellaIndex = 0; flagellaIndex < 6; flagellaIndex++) {
+    const pathAtPoint = getAnimatedPathAtPoint(
+      activeSet[flagellaIndex],
+      mirroredLoopingProgress(
+        0,
+        activeSet[flagellaIndex].animationDuration,
+        offsetMillisecondsElapsed
+      ),
+      easeInOutSine
+    );
+
     CTX.save();
     CTX.scale(0.5, 0.5);
     CTX.strokeStyle = `hsl(90, 18%, ${activeSet[flagellaIndex].lightness}%)`;
-
-    CTX.translate(
-      transition(
-        activeSet[flagellaIndex].from.position.x,
-        activeSet[flagellaIndex].to.position.x,
-        mirroredLoopingProgress(
-          0,
-          activeSet[flagellaIndex].animationDuration,
-          offsetMillisecondsElapsed
-        ),
-        easeInOutSine
-      ),
-      transition(
-        activeSet[flagellaIndex].from.position.y,
-        activeSet[flagellaIndex].to.position.y,
-        mirroredLoopingProgress(
-          0,
-          activeSet[flagellaIndex].animationDuration,
-          offsetMillisecondsElapsed
-        ),
-        easeInOutSine
-      )
-    );
-    CTX.stroke(
-      new Path2D(
-        transitionPath(
-          activeSet[flagellaIndex].from.path,
-          activeSet[flagellaIndex].to.path,
-          mirroredLoopingProgress(
-            0,
-            activeSet[flagellaIndex].animationDuration,
-            offsetMillisecondsElapsed
-          ),
-          easeInOutSine
-        )
-      )
-    );
+    CTX.translate(pathAtPoint.position.x, pathAtPoint.position.y);
+    CTX.stroke(new Path2D(pathAtPoint.path));
     CTX.restore();
   }
 });
