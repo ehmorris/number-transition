@@ -1,6 +1,6 @@
 import { transition, transitionPath } from "./animation.js";
 
-export const getAnimatedPathAtPoint = (pathPair, progress, easing) => {
+export const transitionPathPair = (pathPair, progress, easing) => {
   return {
     path: transitionPath(
       pathPair.from.path,

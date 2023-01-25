@@ -1,11 +1,7 @@
 import { animate, generateCanvas } from "./helpers.js";
 import { easeInOutSine, easeInOutCubic } from "./easings.js";
 import { mirroredLoopingProgress } from "./animation.js";
-import {
-  runPathPairs,
-  tumblePathPairs,
-  getAnimatedPathAtPoint,
-} from "./paths.js";
+import { runPathPairs, tumblePathPairs, transitionPathPair } from "./paths.js";
 
 const canvasWidth = 1000;
 const canvasHeight = 700;
@@ -21,7 +17,7 @@ animate((millisecondsElapsed) => {
   CTX.lineCap = "round";
 
   runPathPairs.forEach((pathPair) => {
-    const pathAtPoint = getAnimatedPathAtPoint(
+    const pathAtPoint = transitionPathPair(
       pathPair,
       mirroredLoopingProgress(
         0,
@@ -40,7 +36,7 @@ animate((millisecondsElapsed) => {
   });
 
   tumblePathPairs.forEach((pathPair) => {
-    const pathAtPoint = getAnimatedPathAtPoint(
+    const pathAtPoint = transitionPathPair(
       pathPair,
       mirroredLoopingProgress(
         0,

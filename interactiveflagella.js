@@ -1,11 +1,7 @@
 import { animate, generateCanvas } from "./helpers.js";
 import { easeInOutSine } from "./easings.js";
 import { mirroredLoopingProgress } from "./animation.js";
-import {
-  runPathPairs,
-  tumblePathPairs,
-  getAnimatedPathAtPoint,
-} from "./paths.js";
+import { runPathPairs, tumblePathPairs, transitionPathPair } from "./paths.js";
 
 const canvasWidth = 700;
 const canvasHeight = 700;
@@ -59,7 +55,7 @@ animate((millisecondsElapsed) => {
     const newActiveSet = [];
     for (let flagellaIndex = 0; flagellaIndex < 6; flagellaIndex++) {
       newActiveSet.push({
-        from: getAnimatedPathAtPoint(
+        from: transitionPathPair(
           activeSet[flagellaIndex],
           mirroredLoopingProgress(
             0,
@@ -96,7 +92,7 @@ animate((millisecondsElapsed) => {
   }
 
   for (let flagellaIndex = 0; flagellaIndex < 6; flagellaIndex++) {
-    const pathAtPoint = getAnimatedPathAtPoint(
+    const pathAtPoint = transitionPathPair(
       activeSet[flagellaIndex],
       mirroredLoopingProgress(
         0,
