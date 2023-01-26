@@ -2,6 +2,8 @@ body {
   margin: 0;
   font-size: 32px;
   font-family: sans-serif;
+  background: #010103;
+  color: white;
 }
 
 nav {
