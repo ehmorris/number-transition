@@ -1,11 +1,11 @@
-import { generateCanvas, textLayoutManager } from "./_helpers.js";
-import { easeInOutSine } from "./_easings.js";
+import { generateCanvas, textLayoutManager } from "./helpers.js";
+import { easeInOutSine } from "./easings.js";
 import {
   mirroredLoopingProgress,
   transition,
   transitionPath,
   animate,
-} from "./_animation.js";
+} from "./animation.js";
 
 const canvasWidth = 1000;
 const canvasHeight = 1100;
