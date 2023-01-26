@@ -1,5 +1,3 @@
-export const randomBetween = (min, max) => Math.random() * (max - min) + min;
-
 export const generateCanvas = ({ width, height, attachNode }) => {
   const element = document.createElement("canvas");
   const context = element.getContext("2d");
@@ -15,19 +13,6 @@ export const generateCanvas = ({ width, height, attachNode }) => {
   document.querySelector(attachNode).appendChild(element);
 
   return context;
-};
-
-export const animate = (drawFunc) => {
-  let startTime = Date.now();
-  const getTimeElapsed = () => Date.now() - startTime;
-  const resetStartTime = () => (startTime = Date.now());
-
-  const drawFuncContainer = () => {
-    drawFunc(getTimeElapsed, resetStartTime);
-    window.requestAnimationFrame(drawFuncContainer);
-  };
-
-  window.requestAnimationFrame(drawFuncContainer);
 };
 
 export const textLayoutManager = ({ context, fontSize }) => {

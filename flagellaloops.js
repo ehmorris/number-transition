@@ -1,7 +1,7 @@
-import { animate, generateCanvas } from "./helpers.js";
-import { easeInOutSine, easeInOutCubic } from "./easings.js";
-import { mirroredLoopingProgress } from "./animation.js";
-import { runPathPairs, tumblePathPairs, transitionPathPair } from "./paths.js";
+import { generateCanvas } from "./_helpers.js";
+import { easeInOutSine, easeInOutCubic } from "./_easings.js";
+import { mirroredLoopingProgress, animate } from "./_animation.js";
+import { runPathPairs, tumblePathPairs, transitionPathPair } from "./_paths.js";
 
 const canvasWidth = 1000;
 const canvasHeight = 700;

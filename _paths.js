@@ -1,4 +1,4 @@
-import { transition, transitionPath } from "./animation.js";
+import { transition, transitionPath } from "./_animation.js";
 
 export const transitionPathPair = (pathPair, progress, easing) => {
   return {

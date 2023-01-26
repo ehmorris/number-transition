@@ -63,3 +63,16 @@ export const transitionPath = (pathStart, pathEnd, progress, easingFunc) => {
 
   return tweenParts.join(" ");
 };
+
+export const animate = (drawFunc) => {
+  let startTime = Date.now();
+  const getTimeElapsed = () => Date.now() - startTime;
+  const resetStartTime = () => (startTime = Date.now());
+
+  const drawFuncContainer = () => {
+    drawFunc(getTimeElapsed, resetStartTime);
+    window.requestAnimationFrame(drawFuncContainer);
+  };
+
+  window.requestAnimationFrame(drawFuncContainer);
+};
