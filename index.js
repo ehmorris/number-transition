@@ -17,9 +17,9 @@ const CTX = generateCanvas({
 animate((millisecondsElapsed) => {
   CTX.clearRect(0, 0, canvasWidth, canvasHeight);
   const textLayout = textLayoutManager({ context: CTX, fontSize: 32 });
-  const progress = mirroredLoopingProgress(0, 5_000, millisecondsElapsed);
+  const progress = mirroredLoopingProgress(0, 5_000, millisecondsElapsed());
 
-  textLayout.newTextLine(`Milliseconds: ${millisecondsElapsed}`);
+  textLayout.newTextLine(`Milliseconds: ${millisecondsElapsed()}`);
 
   textLayout.newTextLine(
     `Square loop (x: ${transition(32, 96, progress).toFixed(2)})`

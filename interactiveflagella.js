@@ -11,44 +11,40 @@ const CTX = generateCanvas({
   attachNode: ".canvasContainer",
 });
 
-let activeSet = runPathPairs;
-let runTransitionPhase1 = false;
-let runTransitionPhase2 = false;
-let transitionTargetSet = null;
-let timeOffset = 0;
-const transitionDuration = 400;
+const state = new Map()
+  .set("activeSet", runPathPairs)
+  .set("transitionPhase", 0)
+  .set("transitionTargetSet", null);
 
 document
   .querySelector("button.activateTumble")
   .addEventListener("click", () => {
     if (
-      activeSet !== tumblePathPairs &&
-      !runTransitionPhase1 &&
-      !runTransitionPhase2
+      state.get("activeSet") !== tumblePathPairs &&
+      state.get("transitionPhase") === 0
     ) {
-      transitionTargetSet = tumblePathPairs;
-      runTransitionPhase1 = true;
+      state
+        .set("transitionTargetSet", tumblePathPairs)
+        .set("transitionPhase", 1);
     }
   });
 
 document.querySelector("button.activateRun").addEventListener("click", () => {
   if (
-    activeSet !== runPathPairs &&
-    !runTransitionPhase1 &&
-    !runTransitionPhase2
+    state.get("activeSet") !== runPathPairs &&
+    state.get("transitionPhase") === 0
   ) {
-    transitionTargetSet = runPathPairs;
-    runTransitionPhase1 = true;
+    state.set("transitionTargetSet", runPathPairs).set("transitionPhase", 1);
   }
 });
 
-animate((millisecondsElapsed) => {
+animate((millisecondsElapsed, resetElapsedTime) => {
   CTX.clearRect(0, 0, canvasWidth, canvasHeight);
   CTX.lineWidth = 10;
   CTX.lineCap = "round";
-  let offsetMillisecondsElapsed = millisecondsElapsed - timeOffset;
+  const transitionDuration = 400;
 
-  if (runTransitionPhase1) {
+  if (state.get("transitionPhase") === 1) {
     // Create a new set that captures the current state of the active set as the
     // start of the animation. Set the end state to the beginning of the normal
     // loop that's targeted
@@ -56,55 +52,56 @@ animate((millisecondsElapsed) => {
     for (let flagellaIndex = 0; flagellaIndex < 6; flagellaIndex++) {
       newActiveSet.push({
         from: transitionPathPair(
-          activeSet[flagellaIndex],
+          state.get("activeSet")[flagellaIndex],
           mirroredLoopingProgress(
             0,
-            activeSet[flagellaIndex].animationDuration,
-            offsetMillisecondsElapsed
+            state.get("activeSet")[flagellaIndex].animationDuration,
+            millisecondsElapsed()
           ),
           easeInOutSine
         ),
         to: {
-          path: transitionTargetSet[flagellaIndex].from.path,
+          path: state.get("transitionTargetSet")[flagellaIndex].from.path,
           position: {
-            x: transitionTargetSet[flagellaIndex].from.position.x,
-            y: transitionTargetSet[flagellaIndex].from.position.y,
+            x: state.get("transitionTargetSet")[flagellaIndex].from.position.x,
+            y: state.get("transitionTargetSet")[flagellaIndex].from.position.y,
           },
         },
         animationDuration: transitionDuration,
-        lightness: transitionTargetSet[flagellaIndex].lightness,
+        lightness: state.get("transitionTargetSet")[flagellaIndex].lightness,
       });
     }
 
-    activeSet = newActiveSet;
-    timeOffset = millisecondsElapsed;
-    offsetMillisecondsElapsed = 0;
-    runTransitionPhase1 = false;
-    runTransitionPhase2 = true;
+    state.set("activeSet", newActiveSet).set("transitionPhase", 2);
+    resetElapsedTime();
   }
 
-  if (runTransitionPhase2 && offsetMillisecondsElapsed >= transitionDuration) {
-    activeSet = transitionTargetSet;
-    timeOffset = millisecondsElapsed;
-    offsetMillisecondsElapsed = 0;
-    runTransitionPhase2 = false;
-    transitionTargetSet = null;
+  if (
+    state.get("transitionPhase") === 2 &&
+    millisecondsElapsed() >= transitionDuration
+  ) {
+    state
+      .set("activeSet", state.get("transitionTargetSet"))
+      .set("transitionPhase", 0);
+    resetElapsedTime();
   }
 
   for (let flagellaIndex = 0; flagellaIndex < 6; flagellaIndex++) {
     const pathAtPoint = transitionPathPair(
-      activeSet[flagellaIndex],
+      state.get("activeSet")[flagellaIndex],
       mirroredLoopingProgress(
         0,
-        activeSet[flagellaIndex].animationDuration,
-        offsetMillisecondsElapsed
+        state.get("activeSet")[flagellaIndex].animationDuration,
+        millisecondsElapsed()
       ),
       easeInOutSine
     );
 
     CTX.save();
     CTX.scale(0.5, 0.5);
-    CTX.strokeStyle = `hsl(90, 18%, ${activeSet[flagellaIndex].lightness}%)`;
+    CTX.strokeStyle = `hsl(90, 18%, ${
+      state.get("activeSet")[flagellaIndex].lightness
+    }%)`;
     CTX.translate(pathAtPoint.position.x, pathAtPoint.position.y);
     CTX.stroke(new Path2D(pathAtPoint.path));
     CTX.restore();

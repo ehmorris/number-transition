@@ -22,7 +22,7 @@ animate((millisecondsElapsed) => {
       mirroredLoopingProgress(
         0,
         pathPair.animationDuration,
-        millisecondsElapsed
+        millisecondsElapsed()
       ),
       easeInOutSine
     );
@@ -41,7 +41,7 @@ animate((millisecondsElapsed) => {
       mirroredLoopingProgress(
         0,
         pathPair.animationDuration,
-        millisecondsElapsed
+        millisecondsElapsed()
       ),
       easeInOutCubic
     );
